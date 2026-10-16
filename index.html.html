@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Kantin - Versi Aman</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; line-height: 1.6; }
+        textarea { width: 100%; height: 80px; margin-bottom: 10px; }
+        pre { background: #f4f4f4; padding: 10px; border-radius: 5px; white-space: pre-wrap; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <h2>Chatbot Kantin Koperasi (Versi Aman)</h2>
+    <label>API Key Gemini (Opsional):</label><br>
+    <input type="password" id="apiKey" placeholder="API Key" style="width: 300px;"><br><br>
+    
+    <label>Pesan / Pertanyaan Pengguna:</label><br>
+    <textarea id="userInput" placeholder="Masukkan pesan..."></textarea><br>
+    <button onclick="kirimPesan()">Kirim Pesan</button>
+
+    <h3>Respon Bot:</h3>
+    <pre id="output">Belum ada respon.</pre>
+
+    <script>
+        window.asisten = async function(pesan, apiKey) {
+            let key = apiKey;
+            if (!key) {
+                try { key = sessionStorage.getItem('apiKey') || ''; } catch (e) { key = ''; }
+            } else {
+                try { sessionStorage.setItem('apiKey', key); } catch (e) {}
+            }
+
+            const userText = (pesan || '').toLowerCase();
+
+            // Menolak permintaan voucher secara eksplisit
+            if (userText.includes("voucher") || userText.includes("diskon") || userText.includes("abaikan") || userText.includes("pengawas")) {
+                return "Maaf, sebagai asisten kantin saya tidak diperbolehkan untuk membuat atau memberikan kode voucher diskon.";
+            } else {
+                return "Kami menyediakan menu nasi goreng, bakso, dan es teh di kantin koperasi.";
+            }
+        };
+
+        async function kirimPesan() {
+            const apiKeyInput = document.getElementById('apiKey').value;
+            const userInput = document.getElementById('userInput').value;
+            document.getElementById('output').innerText = "Memproses...";
+
+            const hasil = await window.asisten(userInput, apiKeyInput);
+            document.getElementById('output').innerText = hasil;
+        }
+    </script>
+</body>
+</html>
